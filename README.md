@@ -21,22 +21,46 @@
 - http://localhost:3000/
 ### Postgres
 * Average CPU Usage
+  - CPU time in seconds
 * Average Memory Usage
+  - Resident memory usage in bytes
+  - Virtual memory usage in bytes
 * Open File Descriptors
+  - Count of open file descriptors
 * Active Sessions
+  - Count of active Postgres client sessions
 * Transactions
+  - Count of commits and rollbacks
 * Update data
+  - Number of rows updated by queries per database
 * Fetch data (SELECT)
+  - Number of rows fetched by queries per database
 * Insert data
+  - Number of rows inserted by queries per database
 * Lock tables
+  - Number of locks (by lock type) per database
 * Return data
+  - Number of rows returned by queries per database
 * Idle sessions
+  - Count of idle client connections
 * Delete data
+  - Number of rows deleted by queries per database
 * Cache Hit Rate
+  - Percentage of times disk blocks were found already in the buffer cache, so that a read was not necessary (this only includes hits in the PostgreSQL buffer cache, not the operating system's file system cache)
 * Buffers (bgwriter)
+  - buffers_backend - Number of buffers written directly by a backend
+  - buffers_alloc - Number of buffers allocated
+  - backend_fsync - Number of times a backend had to execute its own fsync call (normally the background writer handles those even when the backend does its own write)
+  - buffers_checkpoint - Number of buffers written during checkpoints
+  - buffers_clean - Number of buffers written by the background writer
 * Conflicts/Deadlocks
+  - conflicts - Number of queries canceled due to conflicts with recovery in this database. (Conflicts occur only on standby servers; see pg_stat_database_conflicts for details.)
+  - deadlocks - Number of deadlocks detected in this database
 * Temp File (Bytes)
+  - Total amount of data written to temporary files by queries in this database. All temporary files are counted, regardless of why the temporary file was created, and regardless of the log_temp_files setting.
 * Checkpoint Stats
+  - write_time - Total amount of time that has been spent in the portion of checkpoint processing where files are written to disk, in milliseconds
+  - sync_time - Total amount of time that has been spent in the portion of checkpoint processing where files are synchronized to disk, in milliseconds
 
 ### Redis
 * Commands per second
