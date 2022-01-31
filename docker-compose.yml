@@ -99,8 +99,12 @@ services:
     depends_on: [postgres]
     networks:
       - main
+    volumes:
+      - ./postgres_exporter/queries.xml:/etc/postgres_exporter/queries.xml
     environment:
-      DATA_SOURCE_NAME: postgresql://${POSTGRES_USERNAME:-postgres}:${POSTGRES_PASSWORD:-postgres}@${POSTGRES_HOST:-postgres}:${POSTGRES_PORT:-5432}/postgres?sslmode=disable
+      - DATA_SOURCE_NAME=postgresql://postgres:postgres@postgres:5432/postgres?sslmode=disable
+      - PG_EXPORTER_AUTO_DISCOVER_DATABASES=true
+      - PG_EXPORTER_EXTEND_QUERY_PATH=/etc/postgres_exporter/queries.xml
     expose:
       - 9187
     restart: unless-stopped
