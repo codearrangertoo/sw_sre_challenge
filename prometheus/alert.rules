@@ -49,8 +49,8 @@ groups:
       service: PostgreSQL
       severity: warning
     annotations:
-      summary: "PostgreSQL high number of queries per second {{ $labels.cluster }} for database {{ $labels.datname }} "
-      description: "PostgreSQL high number of queries per second on {{ $labels.cluster }} for database {{ $labels.datname }} with a value of {{ $value }} "
+      summary: "PostgreSQL high number of slow on {{ $labels.cluster }} for database {{ $labels.datname }} "
+      description: "PostgreSQL high number of slow queries {{ $labels.cluster }} for database {{ $labels.datname }} with a value of {{ $value }} "
 
   - alert: PostgreSQLQPS
     expr: avg(irate(pg_stat_database_xact_commit{datname!~"template.*"}[5m]) + irate(pg_stat_database_xact_rollback{datname!~"template.*"}[5m])) by (datname) > 10000
