@@ -64,16 +64,22 @@
 
 ### Redis
 * Commands per second
+  - Total number of calls per command
 * Command latency per second
+  - Average amount of time in seconds spent per command
 * Hit ratio per instance
+  - Average hit ratio per instance
 * Total Memory Usage
+  - used_bytes - Total used memory
+  - max_bytes - Configured max memory
+  - rss_bytes - Used RSS memory
 * Memory fragmentation ratio per instance
+  - Ratio of memory used as seen by the operating system ( used_memory_rss ) to memory allocated by Redis ( used_memory )
 * Key evictions per second per instance
+  - Rate of keys per second that have been evicted
 * Connected/Blocked Clients
-* Total Items per DB
-* Expiring vs Not-Expiring Keys
-* Connected slaves by instance
-* Time since last master connection
+  - connected_clients - Because access to Redis is usually mediated by an application (users do not generally directly access the database), for most uses, there will be reasonable upper and lower bounds for the number of connected clients. If the number leaves the normal range, this could indicate a problem. If it is too low, upstream connections may have been lost, and if it is too high, the large number of concurrent client connections could overwhelm your server’s ability to handle requests. Regardless, the maximum number of client connections is always a limited resource—whether by operating system, Redis’s configuration, or network limitations. Monitoring client connections helps you ensure you have enough free resources available for new clients or an administrative session.
+  - blocked_clients - Redis offers a number of blocking commands which operate on lists. BLPOP, BRPOP, and BRPOPLPUSH are blocking variants of the commands LPOP, RPOP, and RPOPLPUSH, respectively. When the source list is non-empty, the commands perform as expected. However, when the source list is empty, the blocking commands will wait until the source is filled, or a timeout is reached. An increase in the number of blocked clients waiting on data could be a sign of trouble. Latency or other issues could be preventing the source list from being filled. Although a blocked client in itself is not cause for alarm, if you are seeing a consistently nonzero value for this metric you should investigate.
 
 ## Alerting
 - Alert rules http://localhost:3000/alerting/list
