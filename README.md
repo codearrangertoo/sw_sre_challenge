@@ -113,3 +113,27 @@
 ### All services
 * monitor_service_down
   - Critical alert when any of the services are down
+
+
+## Key Metrics
+### Postgres
+* Update/Insert/Delete Data
+  - Monitoring the number of rows inserted, updated, and deleted can help give you an idea of what types of write queries your database is serving. If you see a high rate of updated and deleted rows, you should also keep a close eye on the number of dead rows, since an increase in dead rows indicates a problem with VACUUM processes, which can slow down your queries.
+  - A sudden drop in throughput is concerning and could be due to issues like locks on tables and/or rows that need to be accessed in order to make updates. Monitoring write activity along with other database metrics like locks can help you pinpoint the potential source of the throughput issue.
+
+
+Ref: https://www.datadoghq.com/blog/postgresql-monitoring/#key-metrics-for-postgresql-monitoring
+
+### Redis
+* Commands per second
+  - Tracking the throughput of commands processed is critical for diagnosing causes of high latency in your Redis instance. High latency can be caused by a number of issues, from a backlogged command queue, to slow commands, to network link overutilization. You could investigate by measuring the number of commands processed per second—if it remains nearly constant, the cause is not a computationally intensive command. If one or more slow commands are causing the latency issues you would see your number of commands per second drop or stall completely.
+  - A drop in the number of commands processed per second as compared to historical norms could be a sign of either low command volume or slow commands blocking the system. Low command volume could be normal, or it could be indicative of problems upstream.
+* Hit ratio per instance
+  - When using Redis as a cache, monitoring the cache hit rate can tell you if your cache is being used effectively or not. A low hit rate means that clients are looking for keys that no longer exist.
+* Memory fragmentation ratio
+  - The mem_fragmentation_ratio metric gives the ratio of memory used as seen by the operating system (used_memory_rss) to memory allocated by Redis (used_memory).
+* Total Memory Usage
+  - Memory usage is a critical component of Redis performance. If used_memory exceeds the total available system memory, the operating system will begin swapping old/unused sections of memory. Every swapped section is written to disk, severely affecting performance. Writing or reading from disk is up to 5 orders of magnitude (100,000x!) slower than writing or reading from memory (0.1 µs for memory vs. 10 ms for disk).
+  - You can configure Redis to remain confined to a specified amount of memory. Setting the maxmemory directive in the redis.conf file gives you direct control over Redis’s memory usage. Enabling maxmemory requires you to configure an eviction policy for Redis to determine how it should free up memory.
+
+Ref: https://www.datadoghq.com/blog/how-to-monitor-redis-performance-metrics/#key-redis-metrics
