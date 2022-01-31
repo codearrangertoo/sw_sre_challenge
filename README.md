@@ -114,15 +114,22 @@
 * monitor_service_down
   - Critical alert when any of the services are down
 
-
 ## Key Metrics
-### Postgres
-* Update/Insert/Delete Data
+### Postgres (Golden Signals Dashboard)
+* Index vs Sequential Scans
+  - If you see your database regularly performing more sequential scans over time, its performance could be improved by creating an index on data that is frequently accessed. Running EXPLAIN on your queries can tell you more details about how the planner decides to access the data. Sequential scans typically take longer than index scans because they have to scan through each row of a table sequentially, rather than relying on an index to point to the location of specific rows. However, note that the planner will prefer a sequential scan over an index scan if it determines that the query would need to return a large portion of the table.
+* Fetched / Returned Tuples
+  - PostgreSQL tracks tup_returned as the number of rows read/scanned, rather than indicating anything about whether those rows were actually returned to the client. Rather, tup_fetched, or “rows fetched”, is the metric that counts how many rows contained data that was actually needed to execute the query. Ideally, the number of rows fetched should be close to the number of rows returned (read/scanned) on the database. This indicates that the database is completing read queries efficiently—it is not scanning through many more rows than it needs to in order to satisfy read queries.
+* IOPS by Function
   - Monitoring the number of rows inserted, updated, and deleted can help give you an idea of what types of write queries your database is serving. If you see a high rate of updated and deleted rows, you should also keep a close eye on the number of dead rows, since an increase in dead rows indicates a problem with VACUUM processes, which can slow down your queries.
   - A sudden drop in throughput is concerning and could be due to issues like locks on tables and/or rows that need to be accessed in order to make updates. Monitoring write activity along with other database metrics like locks can help you pinpoint the potential source of the throughput issue.
+* Data Written to Temporary Files
+  - PostgreSQL reserves a certain amount of memory—specified by work_mem (4 MB by default)—to perform sort operations and hash tables needed to execute queries. EXPLAIN ANALYZE (which is explained in further detail in the next section) can help you gauge how much memory a query will require.
+  - When a complex query requires access to more memory than work_mem allows, it has to write some data temporarily to disk in order to do its work, which has a negative impact on performance. If you see data frequently being written to temporary files on disk, this indicates that you are running a large number of resource-intensive queries. To improve performance, you may need to increase the size of work_mem—however, it’s important not to set this too high, because it can encourage the query planner to choose more inefficient queries.
 
-
-Ref: https://www.datadoghq.com/blog/postgresql-monitoring/#key-metrics-for-postgresql-monitoring
+#### Reference
+ - https://www.datadoghq.com/blog/postgresql-monitoring/#key-metrics-for-postgresql-monitoring
+ - https://promcat.io/apps/postgresql
 
 ### Redis
 * Commands per second
@@ -136,4 +143,5 @@ Ref: https://www.datadoghq.com/blog/postgresql-monitoring/#key-metrics-for-postg
   - Memory usage is a critical component of Redis performance. If used_memory exceeds the total available system memory, the operating system will begin swapping old/unused sections of memory. Every swapped section is written to disk, severely affecting performance. Writing or reading from disk is up to 5 orders of magnitude (100,000x!) slower than writing or reading from memory (0.1 µs for memory vs. 10 ms for disk).
   - You can configure Redis to remain confined to a specified amount of memory. Setting the maxmemory directive in the redis.conf file gives you direct control over Redis’s memory usage. Enabling maxmemory requires you to configure an eviction policy for Redis to determine how it should free up memory.
 
-Ref: https://www.datadoghq.com/blog/how-to-monitor-redis-performance-metrics/#key-redis-metrics
+#### Reference
+- https://www.datadoghq.com/blog/how-to-monitor-redis-performance-metrics/#key-redis-metrics
